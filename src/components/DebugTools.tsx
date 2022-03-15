@@ -26,7 +26,7 @@ export const DebugTools = () => {
 
   return (<div className="pt-3 row">
     <div className="col-4">
-      <h4>AppState:</h4>
+      <h4>AppState: {JSON.stringify(appState[0])}</h4>
       {makeRadio('main', 'Unauthorized', BlockState.Unauthorized, appState)}
       {makeRadio('main', 'Loading', BlockState.Loading, appState)}
       {makeRadio('main', 'UserUnknown', BlockState.UserUnknown, appState)}
