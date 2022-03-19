@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react';
-import Navbar from './components/Navbar';
+import Navbar from './Navbar';
 import './App.css';
-import DebugTools from './components/DebugTools';
+import DebugTools from './DebugTools';
 import {RecoilRoot, useRecoilState} from 'recoil';
-import {appStateAtom, BlockState, errorAtom} from './store/store';
-import NeedLogin from './components/NeedLogin';
-import {errorToString, makeAuthCode} from './utils/github';
-import {wait} from './utils';
+import {appStateAtom, BlockState, errorAtom} from '../store/store';
+import NeedLogin from './NeedLogin';
+import {makeAccessToken} from '../services/github/auth';
+import {errorToString, wait} from '../utils';
 import {Alert, ProgressBar} from 'react-bootstrap';
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
   useEffect(() => {
     (async() => {
       try {
-        const oauth = await makeAuthCode();
+        const oauth = await makeAccessToken();
         if (!oauth) return;
         console.log('code', oauth);
         setError(undefined);

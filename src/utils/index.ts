@@ -15,3 +15,9 @@ export const ajaxJSON = async (url: string, data: any, { proxy } : { proxy?: str
   const body = await response.json();
   return { response, body };
 }
+
+export const errorToString = (ex: unknown): string => {
+  if (ex instanceof Error) return ex.message;
+  if (typeof ex !== 'string') return JSON.stringify(ex);
+  return ex;
+}

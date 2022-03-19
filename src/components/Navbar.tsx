@@ -2,7 +2,8 @@ import {Container, Nav, Navbar, NavDropdown, Spinner} from 'react-bootstrap';
 import {useCallback, useMemo} from 'react';
 import {useRecoilState} from 'recoil';
 import {appStateAtom, BlockState, userDetailsAtom} from '../store/store';
-import {clearAuthCode, getGithubUrl, UrlAvatarMissing} from '../utils/github';
+import {doLogout, getGithubUrl} from '../services/github/auth';
+import {UrlAvatarMissing} from '../services/github/settings';
 
 export const FullNavbar = () => {
 
@@ -10,7 +11,7 @@ export const FullNavbar = () => {
   const [userDetails] = useRecoilState(userDetailsAtom);
 
   const onLogoutClick = useCallback(() => {
-    clearAuthCode();
+    doLogout();
     setAppState(BlockState.Unauthorized);
   }, [setAppState]);
 
