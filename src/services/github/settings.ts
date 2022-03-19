@@ -1,6 +1,6 @@
 export const UrlAvatarMissing = 'https://github.githubassets.com/images/modules/logos_page/Octocat.png';
 
-export const AuthProxyUrl = 'http://localost:3001/';
+export const AuthProxyUrl = 'http://localhost:3001/';
 
 export const Settings = {
   localStorageKey: 'GitHub_OAuth',

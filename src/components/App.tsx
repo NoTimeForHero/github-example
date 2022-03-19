@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import Navbar from './Navbar';
 import './App.css';
 import {RecoilRoot, useRecoilState} from 'recoil';
@@ -8,6 +8,7 @@ import {makeAccessToken} from '../services/github/auth';
 import {errorToString} from '../utils';
 import {Alert, ProgressBar} from 'react-bootstrap';
 import {getUserInfo} from '../services/github/user';
+import AuthorizedRoot from './AuthorizedRoot';
 
 function App() {
 
@@ -18,11 +19,15 @@ function App() {
   useEffect(() => {
     (async() => {
       try {
+        setAppState(BlockState.Loading);
         const access_token = await makeAccessToken();
-        if (!access_token) return;
+        if (!access_token) {
+          setAppState(BlockState.Unauthorized);
+          return;
+        }
         console.log('code', access_token);
         setError(undefined);
-        setAppState(BlockState.Loading);
+        // throw new Error('lolwut?');
         setUserDetails(await getUserInfo(access_token));
         setAppState(BlockState.UserSpecific);
       } catch (ex) {
@@ -33,6 +38,12 @@ function App() {
     })();
   }, [setAppState, setError, setUserDetails]);
 
+  const blockNoUser = useMemo(() => <div className="card">
+    <div className="card-body p-4 text-center">
+      <h3>Не удалось загрузить информацию о пользователе :(</h3>
+    </div>
+  </div>, []);
+
   return (
     <div className="container p-2">
       <Navbar />
@@ -40,6 +51,8 @@ function App() {
       { error && <Alert variant="danger" onClose={() => setError(undefined)} dismissible>{error}</Alert> }
       { appState === BlockState.Loading && <div className="mt-4"><ProgressBar animated now={100} /></div> }
       { appState === BlockState.Unauthorized && <NeedLogin /> }
+      { appState === BlockState.UserSpecific && <AuthorizedRoot /> }
+      { appState === BlockState.UserUnknown && blockNoUser }
     </div>
   );
 }

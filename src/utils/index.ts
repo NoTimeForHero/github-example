@@ -3,25 +3,42 @@ export const wait = (timeout: number) : Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
 }
 
-export interface AjaxParams {
-  method: 'GET'|'POST'|'PUT'|'PATCH'|'DELETE'|'HEAD',
-  proxy?: string,
-  access_token?: string,
+export const awaitWithTimeout = async <T>(timeout: number, message: string, waitFirst: Promise<T>) : Promise<T> => {
+  const rejectWait : Promise<void> = new Promise((_, reject) => setTimeout(() => reject(message), timeout));
+  return new Promise<T>((resolve, reject) =>
+    Promise
+      .race([waitFirst, rejectWait])
+      .then((value) => value && resolve(value as T))
+      .catch(reject));
 }
 
-export const ajaxJSON = async (url: string, data: any, params : AjaxParams = { method: 'POST' }) => {
+export type HttpMethod = 'GET'|'POST'|'PUT'|'PATCH'|'DELETE'|'HEAD';
+
+interface AjaxProps {
+  method?: HttpMethod,
+  timeout?: number,
+  proxy?: string|undefined,
+  access_token?: string|undefined,
+}
+
+export const ajaxJSON = async (
+  url: string,
+  data: any,
+  props: AjaxProps
+) => {
+  const { access_token, proxy = '' } = props;
+  const { timeout = 5000, method = 'POST' } = props;
+  const body = ['POST','PUT','PATCH'].includes(method) ? JSON.stringify(data) : undefined;
+
   const headers: Record<string,string> = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   };
-  if (params.access_token) headers['Authorization'] = `token ${params.access_token}`;
-  const response = await fetch(`${params.proxy??''}${url}`, {
-    method: 'POST',
-    headers,
-    body: ['POST','PUT','PATCH'].includes(params.method) ? JSON.stringify(data) : undefined
-  });
-  const body = await response.json();
-  return { response, body };
+  if (access_token) headers['Authorization'] = `token ${access_token}`;
+  const responsePromise = fetch(`${proxy}${url}`, { method, headers, body });
+  const response = await awaitWithTimeout(timeout, 'Превышено время ожидания запроса', responsePromise);
+  const responseBody = await response.json();
+  return { response, body: responseBody };
 }
 
 export const errorToString = (ex: unknown): string => {

@@ -19,7 +19,7 @@ export const makeAccessToken = async () => {
     code,
     client_id: Settings.client_id,
     client_secret: Settings.client_secret
-  }, { proxy: AuthProxyUrl, method: 'POST' });
+  }, { proxy: AuthProxyUrl });
   const { access_token, error_description } = ajax.body;
   if (error_description) throw new Error(error_description);
   console.warn('Saving GitHub OAuth code to LocalStorage!', access_token);
@@ -27,5 +27,8 @@ export const makeAccessToken = async () => {
   return access_token;
 }
 
-export const doLogout = () => localStorage.removeItem(Settings.localStorageKey);
+export const doLogout = () => {
+  localStorage.removeItem(Settings.localStorageKey);
+  // document.location = '/';
+}
 
