@@ -17,6 +17,7 @@ const defaultUserDetails : UserDetails = {
   username: 'UserName'
 };
 
+// TODO: Использовать Redux Toolkit?
 export const appStateAtom = atom({key: 'appState', default: BlockState.Unauthorized});
 export const userDetailsAtom = atom<UserDetails>({key: 'userDetails', default: defaultUserDetails});
 export const errorAtom = atom<string|JSX.Element|undefined>({key: 'error', default: undefined});

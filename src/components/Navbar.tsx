@@ -2,7 +2,7 @@ import {Container, Nav, Navbar, NavDropdown, Spinner} from 'react-bootstrap';
 import {useCallback, useMemo} from 'react';
 import {useRecoilState} from 'recoil';
 import {appStateAtom, BlockState, userDetailsAtom} from '../store/store';
-import {clearAuthCode, getGithubUrl, UrlAvatarMissing} from '../utils';
+import {clearAuthCode, getGithubUrl, UrlAvatarMissing} from '../utils/github';
 
 export const FullNavbar = () => {
 

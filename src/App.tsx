@@ -5,7 +5,8 @@ import DebugTools from './components/DebugTools';
 import {RecoilRoot, useRecoilState} from 'recoil';
 import {appStateAtom, BlockState, errorAtom} from './store/store';
 import NeedLogin from './components/NeedLogin';
-import {errorToString, makeAuthCode, wait} from './utils';
+import {errorToString, makeAuthCode} from './utils/github';
+import {wait} from './utils';
 import {Alert, ProgressBar} from 'react-bootstrap';
 
 function App() {
@@ -13,22 +14,24 @@ function App() {
   const [appState, setAppState] = useRecoilState(appStateAtom);
   const [error,setError] = useRecoilState(errorAtom);
 
-  useEffect((async () => {
-    const oauth = makeAuthCode();
-    if (!oauth) return;
-    console.log('code', oauth);
-    try {
-      setError(undefined);
-      setAppState(BlockState.Loading);
-      await wait(2500);
-      throw new Error('Example?!');
-      setAppState(BlockState.UserSpecific);
-    } catch (ex) {
-      console.error(ex);
-      setError('Ошибка загрузки: ' + errorToString(ex));
-      setAppState(BlockState.UserUnknown);
-    }
-  }) as () => void, []);
+  useEffect(() => {
+    (async() => {
+      try {
+        const oauth = await makeAuthCode();
+        if (!oauth) return;
+        console.log('code', oauth);
+        setError(undefined);
+        setAppState(BlockState.Loading);
+        await wait(2500);
+        throw new Error('Example?!');
+        setAppState(BlockState.UserSpecific);
+      } catch (ex) {
+        console.error(ex);
+        setError('Ошибка загрузки: ' + errorToString(ex));
+        setAppState(BlockState.UserUnknown);
+      }
+    })();
+  }, [setAppState, setError]);
 
   return (
     <div className="container p-2">

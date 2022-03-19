@@ -1,4 +1,4 @@
-import {getGithubUrl} from '../utils';
+import {getGithubUrl} from '../utils/github';
 
 const NeedLogin = () => {
   return (

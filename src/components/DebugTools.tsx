@@ -1,6 +1,7 @@
 import { useRecoilState} from 'recoil';
 import {appStateAtom, BlockState, userDetailsAtom} from '../store/store';
 import {FormControl} from 'react-bootstrap';
+import {useMemo} from 'react';
 
 type ReactUseState<T> = [
   state: T,
@@ -24,7 +25,7 @@ export const DebugTools = () => {
   const appState =  useRecoilState(appStateAtom);
   const [userDetails, setUserDetails] = useRecoilState(userDetailsAtom);
 
-  return (<div className="pt-3 row">
+  const tabAppState = useMemo(() => (
     <div className="col-4">
       <h4>AppState: {JSON.stringify(appState[0])}</h4>
       {makeRadio('main', 'Unauthorized', BlockState.Unauthorized, appState)}
@@ -32,6 +33,10 @@ export const DebugTools = () => {
       {makeRadio('main', 'UserUnknown', BlockState.UserUnknown, appState)}
       {makeRadio('main', 'UserSpecific', BlockState.UserSpecific, appState)}
     </div>
+  ), [appState]);
+
+  return (<div className="pt-3 row">
+    {tabAppState}
     <div className="col-4">
       <h4>UserDetails:</h4>
       { appState[0] !== BlockState.UserSpecific && <span className="text-warning">BlockState.UserSpecific</span>}
