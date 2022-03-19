@@ -28,8 +28,8 @@ export const ajaxJSON = async (
 ) => {
   const { access_token, proxy = '' } = props;
   const { timeout = 5000, method = 'POST' } = props;
+  console.warn('AJAX Request', url, props.method);
   const body = ['POST','PUT','PATCH'].includes(method) ? JSON.stringify(data) : undefined;
-
   const headers: Record<string,string> = {
     'Content-Type': 'application/json',
     Accept: 'application/json',

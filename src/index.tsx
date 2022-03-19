@@ -4,6 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core'
+library.add(fas, far);
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

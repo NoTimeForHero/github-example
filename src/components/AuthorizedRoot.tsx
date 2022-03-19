@@ -6,6 +6,7 @@ import {
   Link
 } from 'react-router-dom';
 import {ReactElement} from 'react';
+import UserInfo from './pages/UserInfo';
 
 interface PathType {
   path: string,
@@ -22,7 +23,7 @@ const navigationItems : PathType[] = [
   {
     path: '/',
     title: 'Информация о пользователе',
-    render: <h1>/: Информация о пользователе</h1>,
+    render: <UserInfo />,
   },
 ];
 

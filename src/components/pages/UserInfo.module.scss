@@ -1,0 +1,52 @@
+
+.userCard {
+    margin: 5px auto;
+    border: 1px solid darkgray;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 800px;
+    padding: 5px 20px;
+
+    @media (max-width: 800px) {
+        & {
+            justify-content: space-around;
+            padding: 15px 0;
+        }
+    }
+
+    & .portrait {
+        display: flex;
+        flex-direction: column;
+        padding: 20px 10px;
+        margin: auto 0;
+        & .avatar {
+            width: 128px;
+            height: 128px;
+            border-radius: 50%;
+            margin: 0 auto;
+            margin-bottom: 10px;
+        }
+        & .username {
+            display: block;
+            font-size: 26px;
+            text-decoration: none;
+            &:hover { text-decoration: underline }
+        }
+    }
+
+    & .details {
+        margin: auto 0;
+        padding: 0 10px;
+        & .row {
+            margin: 7px 0;
+        }
+    }
+}
+
+.icon {
+    // Фиксированная длина чтобы нормально выглядели по вертикали
+    width: 20px;
+    margin-right: 4px;
+    color: dimgray;
+}
