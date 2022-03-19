@@ -26,8 +26,8 @@ export const FullNavbar = () => {
       case BlockState.UserSpecific:
         return (
           <NavDropdown title={<span className="pe-1">
-              <img src={userDetails?.avatar || UrlAvatarMissing} className="avatar-img me-2" height="48" width="48" alt=""/>
-              <span>{userDetails?.username}</span>
+              <img src={userDetails?.avatar_url || UrlAvatarMissing} className="avatar-img me-2" height="48" width="48" alt=""/>
+              <span>{userDetails?.login}</span>
             </span>}>
             <NavDropdown.Item href="#" onClick={onLogoutClick}>Logout</NavDropdown.Item>
           </NavDropdown>

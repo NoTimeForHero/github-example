@@ -1,29 +1,29 @@
 import React, {useEffect} from 'react';
 import Navbar from './Navbar';
 import './App.css';
-import DebugTools from './DebugTools';
 import {RecoilRoot, useRecoilState} from 'recoil';
-import {appStateAtom, BlockState, errorAtom} from '../store/store';
+import {appStateAtom, BlockState, errorAtom, userDetailsAtom} from '../store/store';
 import NeedLogin from './NeedLogin';
 import {makeAccessToken} from '../services/github/auth';
-import {errorToString, wait} from '../utils';
+import {errorToString} from '../utils';
 import {Alert, ProgressBar} from 'react-bootstrap';
+import {getUserInfo} from '../services/github/user';
 
 function App() {
 
   const [appState, setAppState] = useRecoilState(appStateAtom);
+  const [,setUserDetails] = useRecoilState(userDetailsAtom);
   const [error,setError] = useRecoilState(errorAtom);
 
   useEffect(() => {
     (async() => {
       try {
-        const oauth = await makeAccessToken();
-        if (!oauth) return;
-        console.log('code', oauth);
+        const access_token = await makeAccessToken();
+        if (!access_token) return;
+        console.log('code', access_token);
         setError(undefined);
         setAppState(BlockState.Loading);
-        await wait(2500);
-        throw new Error('Example?!');
+        setUserDetails(await getUserInfo(access_token));
         setAppState(BlockState.UserSpecific);
       } catch (ex) {
         console.error(ex);
@@ -31,7 +31,7 @@ function App() {
         setAppState(BlockState.UserUnknown);
       }
     })();
-  }, [setAppState, setError]);
+  }, [setAppState, setError, setUserDetails]);
 
   return (
     <div className="container p-2">
@@ -40,7 +40,6 @@ function App() {
       { error && <Alert variant="danger" onClose={() => setError(undefined)} dismissible>{error}</Alert> }
       { appState === BlockState.Loading && <div className="mt-4"><ProgressBar animated now={100} /></div> }
       { appState === BlockState.Unauthorized && <NeedLogin /> }
-      { false && <DebugTools /> }
     </div>
   );
 }

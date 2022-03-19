@@ -19,7 +19,7 @@ export const makeAccessToken = async () => {
     code,
     client_id: Settings.client_id,
     client_secret: Settings.client_secret
-  }, { proxy: AuthProxyUrl });
+  }, { proxy: AuthProxyUrl, method: 'POST' });
   const { access_token, error_description } = ajax.body;
   if (error_description) throw new Error(error_description);
   console.warn('Saving GitHub OAuth code to LocalStorage!', access_token);
