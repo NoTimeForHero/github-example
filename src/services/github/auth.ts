@@ -28,7 +28,7 @@ export const makeAccessToken = async () => {
 }
 
 export const doLogout = () => {
-  localStorage.removeItem(Settings.localStorageKey);
-  // document.location = '/';
+  localStorage.clear();
+  document.location = '/';
 }
 

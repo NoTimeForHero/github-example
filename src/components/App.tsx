@@ -2,33 +2,34 @@ import React, {useEffect, useMemo} from 'react';
 import Navbar from './Navbar';
 import './App.css';
 import {RecoilRoot, useRecoilState} from 'recoil';
-import {appStateAtom, BlockState, errorAtom, userDetailsAtom} from '../store/store';
+import {appStateAtom, BlockState, errorAtom, userDetailsAtom, userReposAtom} from '../store/store';
 import NeedLogin from './NeedLogin';
 import {makeAccessToken} from '../services/github/auth';
 import {errorToString} from '../utils';
 import {Alert, ProgressBar} from 'react-bootstrap';
-import {getUserInfo} from '../services/github/user';
+import {getUserInfo, UserInfo, UserRepo} from '../services/github/user';
 import AuthorizedRoot from './AuthorizedRoot';
 
 function App() {
 
   const [appState, setAppState] = useRecoilState(appStateAtom);
   const [,setUserDetails] = useRecoilState(userDetailsAtom);
+  const [,setUserRepos] = useRecoilState(userReposAtom);
   const [error,setError] = useRecoilState(errorAtom);
 
   useEffect(() => {
     (async() => {
       try {
+        setError(undefined);
         setAppState(BlockState.Loading);
         const access_token = await makeAccessToken();
         if (!access_token) {
           setAppState(BlockState.Unauthorized);
           return;
         }
-        console.log('code', access_token);
-        setError(undefined);
-        // throw new Error('lolwut?');
-        setUserDetails(await getUserInfo(access_token));
+        setUserDetails(await getUserInfo<UserInfo>('user', access_token));
+        // TODO: Загружать остальные страницы, если у пользователя больше 100 репозиториев
+        setUserRepos(await getUserInfo<UserRepo[]>('user/repos?affiliation=owner&sort=updated&per_page=100', access_token));
         setAppState(BlockState.UserSpecific);
       } catch (ex) {
         console.error(ex);
@@ -36,7 +37,7 @@ function App() {
         setAppState(BlockState.UserUnknown);
       }
     })();
-  }, [setAppState, setError, setUserDetails]);
+  }, [setAppState, setError, setUserDetails, setUserRepos]);
 
   const blockNoUser = useMemo(() => <div className="card">
     <div className="card-body p-4 text-center">

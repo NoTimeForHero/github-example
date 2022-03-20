@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 import {ReactElement} from 'react';
 import UserInfo from './pages/UserInfo';
+import UserRepos from './pages/UserRepos';
 
 interface PathType {
   path: string,
@@ -18,7 +19,7 @@ const navigationItems : PathType[] = [
   {
     path: '/repos',
     title: 'Репозитории',
-    render: <h1>/repose: Репозитории</h1>,
+    render: <UserRepos />,
   },
   {
     path: '/',
@@ -33,7 +34,7 @@ const AuthorizedRoot = () => {
     <div>
       <nav>
         <ul className="nav nav-pills px-2 py-3">
-          {navigationItems.map(({path, title}) => (
+          {[...navigationItems].reverse().map(({path, title}) => (
             <li className="nav-item" key={path}>
               <Link to={path} className={`nav-link ${currentUrl===path?'active':''}`}>{title}</Link>
             </li>

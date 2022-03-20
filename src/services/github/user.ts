@@ -27,8 +27,28 @@ export interface UserInfo {
   url: string
 }
 
-export const getUserInfo = async (access_token: string) : Promise<UserInfo> => {
-  const ajax = await cachedAjax('user', access_token);
+export interface UserRepo__Author {
+  id: number,
+  login: string,
+  avatar_url: string,
+  html_url: string
+}
+
+export interface UserRepo {
+  id: number,
+  name: string,
+  full_name: string,
+  language: string,
+  visibility: string,
+  owner: UserRepo__Author,
+  private: boolean,
+  created_at: string,
+  updated_at: string,
+  html_url: string
+}
+
+export const getUserInfo = async <T>(url: string, access_token: string) : Promise<T> => {
+  const ajax = await cachedAjax(url, access_token);
   if (ajax.message) throw new Error(ajax.message);
-  return ajax as UserInfo;
+  return ajax as T;
 }
